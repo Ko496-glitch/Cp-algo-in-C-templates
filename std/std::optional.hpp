@@ -45,7 +45,6 @@ class optional{
 
   //Move Constructor ----------------------------------------
   template<typename U = T, typename = std::enable_if_t<std::is_move_constructible_v<U>>>
-
   optional(optional&& other) noexcept : engaged(false){
     if(other.engaged){
       this->engaged = true;
@@ -54,37 +53,54 @@ class optional{
     }
   }
 
-  optional operator=(optional&& other)noexcept{
+
+  // Copy operator= ------------------------------------------------------------------------
+  optional operator=(const optional& other)noexcept{
     if(this == &other)return *this;
-    // All 4 Conditions
-    // 1) Both are engaged -> we wil
-    // 2) !this    other -> contruct this and copy
-    // 3) this    !other -> destroy
-    // 4) !this   !other -> do nothing 
+
+
     if(this->engaged && other.engaged){
       *this->ptr() = *other.ptr();
-    }else if(!this->engaged && !other.engaged){
-      return *this;
-    }else if(this->engaged && !other.engaged){
+    }
+
+    else if(!this->engaged && other.engaged){
+      new(&storage)T(*other.ptr());
+    }
+
+    else if(this->engaged && !other.engaged){
       clear();
-    }else{
-      new(storage)T(*other.ptr());
-      this->engaged = true;
+    }
+
+    else{
+      return *this;
     }
   }
  
+  //Move operator= --------------------------------------------------------------------------
+  optional & operator=(optional&& other)noexcept(std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>){
 
-    #if 0
-    optional operator(optional&&other){
-        if(this == other)return *this;
-        
-        if(this->engaged && other.engaged){
-            /// To Do
-        }
+    if(this == &other)return *this;
+    
+    if(this->engaged && other.engaged){
+      *this->ptr() = std::move(*other.ptr());
+      other.clear();
     }
-#endif
+    
+    else if(this->engaged && !other.engaged){
+      this->clear();
+    }
+    
+    else if(!this->engaged && !other.engaged){
+      return *this;
+    }
 
-
+    else{
+      new(&storage)T(std::move(*other.ptr()));
+      this->engaged = true;
+      other.clear();
+    }
+    return *this;
+  }
 
 
 
