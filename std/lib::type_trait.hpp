@@ -2,23 +2,32 @@
 #include<type_traits>
 #include<utility>
 #include<new>
+#include "std::optional.hpp"
 
-std::namespace lib{
+namespace lib{
 template<typename T,typename U, typename = void>
 struct is_eq_comparable: std::false_type{};
 
 template<typename T, typename U>
 struct is_eq_comparable<T,U, std::void_t<decltype(declval<T>() == declval<U>())>>: std::true_type {};
 
+template<typename T,typename U>
+inline constexpr  bool is_eq_comparable_v = is_eq_comparable<T,U>::value;
+
 
 template<typename T>
-struct is_optional_v: std::false_type{};
+class optional;
+
+
+template<typename T>
+struct is_optional: std::false_type{};
 
 
 template<typename U>
-struct is_optional_v<optional<U>>: std::true_type{};
+struct is_optional<optional<U>>: std::true_type{};
 
-template<typename U>
+
+template<typename T>
 inline constexpr bool is_optional_v = is_optional<T>::value;
 }
 
