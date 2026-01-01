@@ -2,6 +2,7 @@
 #include<utility>
 #include<new>
 #include<type_traits>
+#include<functional>
 #include "lib::type_trait.hpp" // for eq_comparable type trait
 
 
@@ -131,6 +132,30 @@ class optional{
   }
 
 
+  
+  #if 0
+  Iterators
+    1) begin
+    2) end
+  #endif
+
+
+  T* begin()noexcept{
+    return this->engaged?this->ptr():lib::null_opt;
+  }
+  
+  T* begin() const noexcept{
+    return this->engaged? this->ptr():lib::null_opt;
+  }
+
+  T* end()noexcept{
+    return this->engaged? this->ptr() +1: this->ptr();
+  }
+  
+  
+  T* end()const noexcept{
+    return this->engaged? this->ptr() +1: this->ptr();
+  }
 
   #if 0
   Modifiers
@@ -385,4 +410,4 @@ R or_else(Callable&& f) const && noexcept(std::is_nothrow_invocable_v<Callable>)
       return true;
     }
     return true;
-  } 
+  }
