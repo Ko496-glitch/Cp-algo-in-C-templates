@@ -4,7 +4,6 @@
 #include<functional>
 #include "std::optional.hpp"
 #include "lib::type_trait.hpp"
-#include "forward.hpp"
 
 //lib::type_trait.hpp test-----------------------------
 
@@ -22,13 +21,6 @@ static_assert(std::is_constructible_v<lib::nullopt_t,int>);
 static_assert(std::is_same_v<std::add_pointer_t<lib::nullopt_t>,lib::nullopt_t*>);
 static_assert(std::is_literal_type_v<lib::nullopt_t>);
 
-
-//::move tests
-
-
-static_assert(is_lvalue_reference_v<::move<)
-
-
 #if 0
 std::optional
 1) iterators
@@ -39,12 +31,5 @@ std::optional
 
 int main(){
 
-
-
-
-  int num = 10;
-  vector<int>a{::forward(num),false};
-  vector<int> b = ::move(a);
-  std::cout << b.size() << a.size() << std::endl;
   return 0;
 }
