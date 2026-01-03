@@ -7,7 +7,7 @@
 #include "lib::type_trait.hpp"
 
 namespace lib{
-  template<typename T,std::size_t capacity_ = 1026, typename Container = std::array<T,capacity_>>
+  template<typename T,std::size_t capacity_ = 1026,typename Policy = no_overflow,  typename Container = std::array<T,capacity_>>
     class egress_buffer{
     private:
       std::size_t head_; // pointer index to index that will be removed
