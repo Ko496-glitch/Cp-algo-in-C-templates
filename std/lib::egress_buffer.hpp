@@ -15,13 +15,7 @@ namespace lib{
       std::size_t size_; // current size of the array we will use
       Container storage_; // default is set to std::array
     
-    T* ptr()noexcept{
-      return reinterpret_cast<T>(storage_);
-    }
 
-    const T* ptr()const noexcept{
-      return reinterpret_cast<T>(storage_);
-    }
     
     public:
       constexpr egress_buffer()noexcept : head_(0),tail_(0),size_(0){}
