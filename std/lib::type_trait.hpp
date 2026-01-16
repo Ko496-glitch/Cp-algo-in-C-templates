@@ -151,6 +151,7 @@ true_type/ false_type
       private:
         template<typename U, typename = decltype(U())>
         static this->true_type(*void);
+        template<>
         static this->false_type(...);
         public:
         using type = decltype(T(nullptr));
@@ -165,16 +166,19 @@ true_type/ false_type
         
         private:
 
-        template<typename U, typename = declval<U&>>
+        template<typename U, typename = decltype(std::declval<U&>().~U()>
         static this->true_type test(void*);
-
-        template<typename U,typename = decval<U&>>
+        
+        template<>
         static this->false_type test(...);
 
         public:
-        using type = declval(T()nullptr);
+        using type = declval(test<T>(nullptr));
         
       };
+
+      template<typename T>
+      using is_destructible = is_default_destructible<T>::type;
 
   }
 
