@@ -96,9 +96,86 @@ inline constexpr bool is_optional_v = is_optional<T>::value;
     using LvalueRef = typename add_lreference<T>::type;
     template<typename T>
     using RvalueRef = typename add_rreference<T>::type;
+    
 
 
+#if 0
+true_type/ false_type    
+#endif
+    
+    template<bool val>
+    struct true_type{
+      static bool constexpr value = val; 
+    };
 
-}
+    template<bool val>
+    struct false_type{
+      static bool constexpr value = val;
+    }; 
+    
+    using TrueType = true_type<true>::value;
+
+    using FalseType = false_type<false>::value;
+
+    void implT(int x, TrueType){
+      std:cout<< "tru type path";
+    } 
+    
+    void impl(int x, false_type){
+      std::cout<< "false type path";
+    }
+
+    template<typename T>  
+    struct isPointerT:false_type{
+      // TO DO 
+    };
+
+    template<typename T1, typename T2>
+    struct add_type{
+      using type = std::decltype(std::declval<T1>(), std::declval<T2>());// will return type&& most of the time
+    };
+    
+    template<typename T1,typename T2>
+    using PlusType = typename add_type<T1,T2>::type;
+
+    template<typename T1, typename T2>
+    struct minus_type{
+      using type = std::decltype(std::declval<T1>() - std::declval<T2>()); // will return type&& most of the time
+    };
+
+    template<typename T1,typename T2>
+    using SubType = typename minus_type<T1,T2>::type;
+
+    template<typename T>
+    struct is_default_constructible{
+      private:
+        template<typename U, typename = decltype(U())>
+        static this->true_type(*void);
+        static this->false_type(...);
+        public:
+        using type = decltype(T(nullptr));
+      };
+    
+      template<typename T>
+      using is_constructible = is_default_constructible<T>::type;
+
+
+      template<typename T>
+      struct is_default_destructible{
+        
+        private:
+
+        template<typename U, typename = declval<U&>>
+        static this->true_type test(void*);
+
+        template<typename U,typename = decval<U&>>
+        static this->false_type test(...);
+
+        public:
+        using type = declval(T()nullptr);
+        
+      };
+
+  }
 
 
