@@ -150,15 +150,15 @@ true_type/ false_type
     struct is_default_constructible{
       private:
         template<typename U, typename = decltype(U())>
-        static this->true_type(*void);
-        template<>
-        static this->false_type(...);
+        static true_type test(void*);
+        template<typename>
+        static false_type test(...);
         public:
-        using type = decltype(T(nullptr));
+        using type = decltype(test<T>(nullptr));
       };
     
       template<typename T>
-      using is_constructible = is_default_constructible<T>::type;
+      struct is_constructible : is_default_constructible<T>::type;
 
 
       template<typename T>
@@ -166,19 +166,19 @@ true_type/ false_type
         
         private:
 
-        template<typename U, typename = decltype(std::declval<U&>().~U()>
-        static this->true_type test(void*);
+        template<typename U, typename = decltype(std::declval<U&>().~U())>
+        static true_type test(void*);
         
-        template<>
-        static this->false_type test(...);
+        template<typename>
+        static false_type test(...);
 
         public:
-        using type = declval(test<T>(nullptr));
+        using type = decltype(test<T>(nullptr));
         
       };
 
       template<typename T>
-      using is_destructible = is_default_destructible<T>::type;
+      struct is_destructible : is_default_destructible<T>::type{};
 
   }
 
