@@ -30,5 +30,12 @@ namespace lib{
     void advance_impl(iterator it, Distance n, random_access_iterator_tag){
       it+=n;
     }
+  template<typename Iterator, Distance n>
+  void advance(Iterator &it, Distance n){
+    using tag = typename lib::iterator_traits<Iterator>::iterator_category;
+    advance(it,n,tag);
+  }
+
+
 
 }
